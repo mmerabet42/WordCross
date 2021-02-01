@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Quicksand';
+    src: url(./fonts/Quicksand-VariableFont_wght.ttf);
+}
+
+body, html, #root {
+    height: 100%;
+    margin: 0px;
+    /* padding: 50px; */
+}
+
+body {
+    font-family: 'Quicksand';
+}
+
+:root {
+    --green: #119DA4;
+    --green2: #416788;
+    --red: #E16684;
+    --red2: #ED6B86;
+    --blue3: #387DBC;
+    --blue: #5386E4;
+    --blue2: #3D3A4B;
+    --white: #EEEEFF;
+    --yellow: #FFD670;
+    --marron: #120309;
+    --dark: #23232F;
+    --dark2: #4E4E6A;
+    --scrollbar-thumb: #09090955;
+}
