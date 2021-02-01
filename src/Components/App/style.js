@@ -83,8 +83,7 @@ export const AppContainer = styled.div`
     .menu-selector .selected {
         background-color: var(--white);
         color: var(--dark);
-        border-bottom: 5px var(--blue) solid;
-        padding-bottom: 12px;
+        box-shadow: 0px -5px 0px var(--blue) inset;
 
         :hover {
             background-color: var(--white);
@@ -92,6 +91,7 @@ export const AppContainer = styled.div`
     }
 
     .title {
+        cursor: pointer;
         font-weight: bold;
 
         margin-top: 0px;

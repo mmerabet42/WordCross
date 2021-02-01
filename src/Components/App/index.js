@@ -11,6 +11,7 @@ import {
 import Dashboard from '../Dashboard';
 import GraphOutput from '../GraphOutput';
 import Bookmarks from '../Bookmarks';
+import Homepage from '../Homepage';
 
 const App = () => (
     <AppProvider>
@@ -19,8 +20,9 @@ const App = () => (
 );
 
 const InnerApp = () => {
+
     const [ menuState, setMenuState ] = React.useState({
-        current: 0,
+        current: 2,
         menus: [
             {
                 name: "Generator",
@@ -35,11 +37,19 @@ const InnerApp = () => {
                 component: (
                     <Bookmarks/>
                 ) 
+            }, {
+                name: "Homepage",
+                showMenu: false,
+                component: (
+                    <Homepage />
+                )
             }
         ]
     });
 
-    const menuClick = (id) => {
+    const menuClick = (name) => {
+        const id = menuState.menus.findIndex(value => value.name === name);
+
         if (menuState.current === id)
             return;
         
@@ -52,13 +62,18 @@ const InnerApp = () => {
     return (
         <AppContainer>
             <div className="title-container">
-                <p className="title">WordCross</p>
+                <p
+                    className="title"
+                    onClick={() => menuClick("Homepage")}
+                >
+                    WordCross
+                </p>
                 <div className="menu-selector">
                     {menuState.menus.map((menu, id) => (
-                        <p
+                        menu.showMenu || menu.showMenu === undefined && <p
                             key={id}
                             className={`icon ${menu.name} ${id === menuState.current ? "selected" : null}`}
-                            onClick={() => menuClick(id)}
+                            onClick={() => menuClick(menu.name)}
                         >
                             {menu.name}
                         </p>
