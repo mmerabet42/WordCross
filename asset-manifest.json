@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/WordCross/static/js/main.0baad7b4.chunk.js",
+    "main.js.map": "/WordCross/static/js/main.0baad7b4.chunk.js.map",
+    "runtime-main.js": "/WordCross/static/js/runtime-main.359e66d3.js",
+    "runtime-main.js.map": "/WordCross/static/js/runtime-main.359e66d3.js.map",
+    "static/js/2.60013e48.chunk.js": "/WordCross/static/js/2.60013e48.chunk.js",
+    "static/js/2.60013e48.chunk.js.map": "/WordCross/static/js/2.60013e48.chunk.js.map",
+    "index.html": "/WordCross/index.html",
+    "static/js/2.60013e48.chunk.js.LICENSE.txt": "/WordCross/static/js/2.60013e48.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.359e66d3.js",
+    "static/js/2.60013e48.chunk.js",
+    "static/js/main.0baad7b4.chunk.js"
+  ]
+}
