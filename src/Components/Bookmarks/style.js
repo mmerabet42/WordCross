@@ -147,7 +147,8 @@ export const Graph = styled.div`
 
         border-radius: 10px;
 
-        background-color: rgba(255, 214, 112, 0.7);
+        background-color: var(--yellow);
+        opacity: 0.7;
 
         transform: scale(0);
         transition: all 0.1s ease-in-out;
@@ -165,6 +166,10 @@ export const Graph = styled.div`
         align-items: center;
 
         font-size: 40px;
+
+        .fullscreen {
+            color: var(--dark);
+        }
 
         .remove {
             color: var(--red);

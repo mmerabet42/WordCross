@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { HiMenu } from 'react-icons/hi';
+import { RiSettings3Fill } from 'react-icons/ri';
 
 import { AppProvider } from '../../Contexts/AppContext';
 
@@ -12,6 +13,7 @@ import Dashboard from '../Dashboard';
 import GraphOutput from '../GraphOutput';
 import Bookmarks from '../Bookmarks';
 import Homepage from '../Homepage';
+import Settings from '../Settings';
 
 const App = () => (
     <AppProvider>
@@ -21,6 +23,7 @@ const App = () => (
 
 const InnerApp = () => {
 
+    const [ showSettings, setShowSettings ] = React.useState(false);
     const [ menuState, setMenuState ] = React.useState({
         current: 2,
         menus: [
@@ -70,7 +73,7 @@ const InnerApp = () => {
                 </p>
                 <div className="menu-selector">
                     {menuState.menus.map((menu, id) => (
-                        menu.showMenu || menu.showMenu === undefined && <p
+                        (menu.showMenu || menu.showMenu === undefined) && <p
                             key={id}
                             className={`icon ${menu.name} ${id === menuState.current ? "selected" : null}`}
                             onClick={() => menuClick(menu.name)}
@@ -78,14 +81,20 @@ const InnerApp = () => {
                             {menu.name}
                         </p>
                     ))}
-                    <HiMenu
+                    <RiSettings3Fill
                         className="settings"
+                        onClick={() => setShowSettings(true)}
                     />
                 </div>
             </div>
             <div className="padded">
                 {menuState.menus[menuState.current].component}
             </div>
+            { showSettings &&
+                <Settings 
+                    onClick={() => setShowSettings(false)}
+                />
+            }
         </AppContainer>
     )
 }

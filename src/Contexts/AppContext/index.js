@@ -65,7 +65,7 @@ export const AppProvider = props => {
         console.log(`intention: ${intention}`);
         if (intention === -1 || (intention === 1 && offsets.offset + offsets.max < graphs.length)) {
             setOffsets(prev => ({
-                offset: prev.offset + prev.max * intention,
+                offset: Math.max(0, prev.offset + prev.max * intention),
                 max: prev.max,
                 goSmooth: intention === 1 ? 1 : 0
             }));
