@@ -57,8 +57,10 @@ const Bookmarks = () => {
                             </div>
                             <div className="controls">
                                 <p className="graph-count">{graphs.length} element(s)</p>
-                                <ShowEyeTag className="see-eye" onClick={handleShow} />
-                                <CgClose className="clear-books" onClick={clearFavs} />
+                                <div className="icons">
+                                    <ShowEyeTag className="see-eye" onClick={handleShow} />
+                                    <CgClose className="clear-books" onClick={clearFavs} />
+                                </div>
                             </div>
                         </div>
                         <div className="graphs">

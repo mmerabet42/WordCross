@@ -11,8 +11,19 @@ export const GraphsContainer = styled.div`
     overflow: hidden;
     overflow-x: scroll;
 
+    @media only screen and (max-width: 600px) {
+        flex-direction: column;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
     ::-webkit-scrollbar {
         height: 5px;
+
+        @media only screen and (max-width: 600px) {
+            height: 0px;
+            width: 5px;
+        }
     }
 
     ::-webkit-scrollbar-track {
@@ -52,88 +63,73 @@ export const GraphsContainer = styled.div`
 export const Graph = styled.div`
     position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 10px;
-    border-radius: 20px;
-    padding: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
     overflow: hidden;
 
-    /* height: calc(100% - 20px); */
-    /* min-width: ${props => props.widthC + 1 + "em"}; */
-    /* height: ${props => `${(props.heightC + 1) * 40}px`}; */
-    min-width: ${props => `${(props.surplue * ((props.widthC + 1) * 40)) + 20}px`};
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
 
-    font-size: 40px;
-    background-color: var(--dark2);
+    @media only screen and (min-width: 600px) {
+        min-width: ${props => `${(props.widthC + 1)}em`};
+    }
+
+    @media only screen and (max-width: 600px) {
+        min-height: ${props => `${(props.heightC + 4)}em`};
+    }
+
+    font-size: ${props => `${props.surplue * 40}px`};
+    background-color: var(--dark3);
     color: var(--white);
 
-    :hover .mask {
-        transform: scale(1.0);
+    .centerer {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .inner-container {
         position: relative;
 
-        transform-origin: left center;
-        transform: ${props => `scale(${props.surplue})`};
-        height: ${props => `${(props.heightC + 1) * 40}px`};
-        min-width: ${props => `${(props.surplue * ((props.widthC + 1) * 40)) + 20}px`};
+        height: ${props => `${(props.heightC + 1)}em`};
+        width: ${props => `${(props.widthC + 1)}em`};
     }
 
     .mask {
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-
-        margin: 10px;
         padding: 10px;
         border-radius: 20px;
-
-        background-color: #FFD67055;
-        backdrop-filter: blur(3px);
-        transform: scale(0);
-        transition: all 0.1s linear;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
 
         z-index: 2;
 
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
 
-        font-size: 50px;
+        font-size: 20px;
         
         p {
             margin: 0px;
+            text-align: center;
+            background-color: var(--dark3);
+            padding: 5px;
+            border-radius: 10px;
         }
 
         .icons {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
             align-items: center;
-        }
-
-        .full-icon {
-            margin-right: 0.2em;
-            margin-left: 0.2em;
-            color: #ffffff22;
-            transition: all 0.1s linear;
-        }
-
-        :hover .full-icon {
-            color: #ffffff;
-
-            :hover {
-                transform: scale(1.1);
-            }
-
-            :active {
-                transform: scale(0.9);
-            }
+            font-size: 40px;
+            background-color: var(--dark3);
+            padding: 5px;
+            border-radius: 10px;
         }
 
         .star-icon {
@@ -142,8 +138,32 @@ export const Graph = styled.div`
 
             transition: all 0.1s linear;
 
-            :hover {
-                transform: scale(1.1);
+            @media only screen and (min-width: 600px) {
+                :hover {
+                    transform: scale(1.1);
+                }
+            }
+
+            :active {
+                transform: scale(0.9);
+            }
+        }
+
+        .full-icon {
+            margin-right: 0.2em;
+            margin-left: 0.2em;
+
+            color: #ffffff22;
+            @media only screen and (max-width: 600px) {
+                color: var(--white);
+            }
+            
+            transition: all 0.1s linear;
+            
+            @media only screen and (min-width: 600px) {
+                :hover {
+                    transform: scale(1.1);
+                }
             }
 
             :active {
@@ -152,99 +172,11 @@ export const Graph = styled.div`
         }
     }
 
-    /* .main {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        overflow: hidden;
-
-        border-radius: 10px;
-    }
-
-    .centerer {
-        flex: 1 1 auto;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        background-color: var(--dark2);
-
-        border-bottom-left-radius: 30px;
-        border-bottom-right-radius: 30px;
-        box-shadow: 0px 5px 1px rgba(0, 0, 0, 0.15);
-    }
-
-    .container {
-        margin: 1em;
-        
-        width: ${props => props.widthC + 1 + "em"};
-        height: ${props => `${(props.heightC > 5 ? 5 : props.heightC) + 1}em`};
-        transform-origin: top center;
-        transform: ${props => `scale(${props.heightC <= 5 ? 1.0 : 6 / props.heightC})`};
-
-        position: relative;
-
-    }
-
-    .controller {
-        flex: 0 1 auto;
-
-        font-size: 20px;
-        color: white;
-        font-weight: bold;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        margin-left: 2em;
-        margin-right: 2em;
-    }
-
-    .icons {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 2em;
-    }
-
-    .full-icon {
-        margin-right: 0.2em;
-        margin-left: 0.2em;
-        color: #ffffff22;
-        transition: all 0.1s linear;
-    }
-
-    :hover .full-icon {
-        color: #ffffff;
-
-        :hover {
-            transform: scale(1.1);
+    @media only screen and (min-width: 600px) {
+            :hover .full-icon {
+                color: var(--white);
+            }
         }
-
-        :active {
-            transform: scale(0.9);
-        }
-    }
-
-    .star-icon {
-        margin-right: 0;
-        color: var(--yellow);
-
-        transition: all 0.1s linear;
-
-        :hover {
-            transform: scale(1.1);
-        }
-
-        :active {
-            transform: scale(0.9);
-        }
-    } */
 `;
 
 export const Character = styled.p`

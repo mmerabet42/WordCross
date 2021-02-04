@@ -11,6 +11,7 @@ import {
 
 const Settings = ({onClick}) => {
     const { offsets, setOffsets } = React.useContext(AppContext);
+    const allContext = React.useContext(AppContext);
 
     const graphLimitRef = React.useRef();
 
@@ -20,6 +21,21 @@ const Settings = ({onClick}) => {
                 max: { $set: graphLimitRef.current.value - 0 }
             }))
         }
+    }
+
+    const clearCache = () => {
+        allContext.setNames([]);
+        allContext.setGraphs([]);
+        allContext.setOffsets(prev => ({
+            offset: 0,
+            max: prev.max,
+            goSmooth: 0
+        }));
+        allContext.setLastConfig(null);
+        allContext.setFavorites({
+            names: [],
+            graphs: []
+        });
     }
 
     return (
@@ -35,8 +51,16 @@ const Settings = ({onClick}) => {
                         <p className="group-title">Generator Output</p>
                         <div className="group-settings">
                             <div className="setting graph-limit">
-                                <p className="descr">Maximum number of graphs to be shown (5{'>'}q10000)</p>
+                                <p className="descr">Maximum number of graphs to be shown (5{'>'}10000)</p>
                                 <input ref={graphLimitRef} className="input" type="number" defaultValue={offsets.max} min="5" max="10000" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="group">
+                        <p className="group-title">Memory</p>
+                        <div className="group-settings">
+                            <div className="setting clear-cache">
+                                <button className="input" onClick={clearCache}>Clear cache</button>
                             </div>
                         </div>
                     </div>

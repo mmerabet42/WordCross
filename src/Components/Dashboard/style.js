@@ -16,10 +16,30 @@ export const DashboardContainer = styled.div`
     @media only screen and (max-width: 600px) {
         margin-left: 5px;
         margin-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    .hide-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        color: var(--white);
+        font-size: 20px;
+
+        p {
+            padding: 0px;
+            margin: 0px;
+            margin-right: 5px;
+            font-size: 15px;
+        }
+
+        @media only screen and (min-width: 600px) {
+            display: none;
+        }
     }
 
     .inputs {
-        display: flex;
+        display: ${props => props.showDashboard ? "flex" : "none"};
         flex-direction: row;
         padding: 5px;
 

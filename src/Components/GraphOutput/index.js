@@ -117,18 +117,24 @@ const GraphOutput = () => {
 }
 
 const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) => {
-    const [ graphStyle, setGraphStyle ] = React.useState({});
     const [ surplueValue, setSurplueValue ] = React.useState(0.0);
     const graphRef = React.useRef();
 
     const rescaleGraph = () => {
-        const graphHeight = (graphs[graphId].height + 2) * 40;
-        if (graphHeight > scrollRef.current.clientHeight) {
-            const surplue = (scrollRef.current.clientHeight - 20) / graphHeight;
-            console.log(`surplue: ${surplue} ${(surplue * ((graphs[graphId].width + 1) * 40)) + 20}`);
-            if (surplue > 0.0) {
+        let axis, bigAxis;
+        if (window.innerWidth <= 600) {
+            axis = (graphs[graphId].width + 2) * 40;
+            bigAxis = scrollRef.current.clientWidth;
+        }
+        else {
+            axis = (graphs[graphId].height + 6) * 40;
+            bigAxis = scrollRef.current.clientHeight;
+        }
+
+        if (axis > bigAxis) {
+            const surplue = (bigAxis - 20) / axis;
+            if (surplue > 0.0)
                 setSurplueValue(surplue);
-            } 
         }
     }
 
@@ -138,31 +144,31 @@ const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) =
         window.addEventListener("resize", rescaleGraph);
 
         return () => window.removeEventListener("resize", rescaleGraph);
-    }, []);
+    });
 
     return (
         <Graph
-            // ref={}
             widthC={graphs[graphId].width}
             heightC={graphs[graphId].height}
             surplue={surplueValue === 0 ? 1.0 : surplueValue}
         >
-            <div
-                ref={graphRef}
-                className="inner-container"
-                // style={graphStyle}
-            >
-                {graphs[graphId].letters.map((letter, id) => (
-                    <Character
-                        key={id}
-                        xPos={letter.x}
-                        yPos={letter.y}
-                        xOffset={graphs[graphId].xOffset}
-                        yOffset={graphs[graphId].yOffset}
-                    >
-                        {letter.letter}
-                    </Character>
-                ))}
+            <div className="centerer">
+                <div
+                    ref={graphRef}
+                    className="inner-container"
+                >
+                    {graphs[graphId].letters.map((letter, id) => (
+                        <Character
+                            key={id}
+                            xPos={letter.x}
+                            yPos={letter.y}
+                            xOffset={graphs[graphId].xOffset}
+                            yOffset={graphs[graphId].yOffset}
+                        >
+                            {letter.letter}
+                        </Character>
+                    ))}
+                </div>
             </div>
             <div className="mask">
                 <p># {graphId}</p>
@@ -176,33 +182,6 @@ const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) =
             </div>
         </Graph>
     );
-    // {/* <div className="main">
-    //     <div className="centerer">
-    //         <div className="container">
-    //             {graphs[graphId].letters.map((letter, id) => (
-    //                 <Character
-    //                     key={id}
-    //                     xPos={letter.x}
-    //                     yPos={letter.y}
-    //                     xOffset={graphs[graphId].xOffset}
-    //                     yOffset={graphs[graphId].yOffset}
-    //                 >
-    //                     {letter.letter}
-    //                 </Character>
-    //             ))}
-    //         </div>
-    //     </div>
-    //     <div className="controller">
-    //         <p># {graphId}</p>
-    //         <div className="icons">
-    //             <MdFullscreen className="full-icon" />
-    //             { bookmarked
-    //                 ? <AiFillStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
-    //                 : <AiOutlineStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
-    //             }
-    //         </div>
-    //     </div>
-    // </div> */}
 }
 
 export default GraphOutput;

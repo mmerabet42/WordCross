@@ -19,13 +19,17 @@ export const BookmarksContainer = styled.div`
     }
 
     .names {
-        background-color: var(--dark2);
+        background-color: var(--dark3);
         color: var(--white);
 
         border-radius: 20px;
         padding: 10px;
 
         margin: 10px;
+
+        @media only screen and (max-width: 600px) {
+            padding: 5px;
+        }
     }
 
     .name-info {
@@ -47,7 +51,22 @@ export const BookmarksContainer = styled.div`
         flex-direction: row;
         align-items: center;
 
+        @media only screen and (max-width: 600px) {
+            flex-direction: column;
+        }
+
         margin-left: 20px;
+
+        .icons {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .graph-count {
+            white-space: nowrap;
+            margin: 0px;
+            font-size: 15px;
+        }
 
         .see-eye, .clear-books {
             font-size: 1.5em;
@@ -99,7 +118,7 @@ export const BookmarksContainer = styled.div`
         }
 
         ::-webkit-scrollbar-thumb {
-            background-color: var(--dark);
+            background-color: var(--dark2);
             border-radius: 10px;
         }
 
@@ -141,9 +160,6 @@ export const Graph = styled.div`
         bottom: -0.5em;
         left: -0.5em;
         right: -0.5em;
-
-        /* width: ${props => `${props.widthC + 4}em`};
-        height: ${props => `${props.heightC + 4}em`}; */
 
         border-radius: 10px;
 

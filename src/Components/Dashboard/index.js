@@ -4,6 +4,7 @@ import update from 'immutability-helper';
 import { CgClose } from 'react-icons/cg';
 import { MdEdit } from 'react-icons/md';
 import { BiMove } from 'react-icons/bi';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import {
     DashboardContainer
@@ -21,6 +22,7 @@ const Dashboard = () => {
 
     const [ currentNames, setCurrentNames ] = React.useState([]);
     const [ nameMode, setNameMode ] = React.useState({});
+    const [ showDashboard, setShowDashboard ] = React.useState(true);
 
     const nameRef = React.useRef();
     
@@ -164,7 +166,11 @@ const Dashboard = () => {
     }
 
     return (
-        <DashboardContainer>
+        <DashboardContainer showDashboard={showDashboard}>
+            <div className="hide-container" onClick={() => setShowDashboard(!showDashboard)}>
+                <p>{ showDashboard ? "Hide" : "Show" } dashboard</p>
+                { showDashboard ? <IoIosArrowDown /> : <IoIosArrowUp /> }
+            </div>
             <div className="inputs">
                 <div className="fields">
                     <input

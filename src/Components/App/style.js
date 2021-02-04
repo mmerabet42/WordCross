@@ -12,6 +12,7 @@ export const AppContainer = styled.div`
     background-color: #23232F;
 
     .padded {
+        /* flex: 1 1 auto; */
         height: calc(100% - 100px);
         margin: 50px;
 
@@ -26,9 +27,36 @@ export const AppContainer = styled.div`
             margin-right: 10px;
         }
 
+        @media only screen and (min-width: 600px) {
+            .mobile-scrollable {
+                flex: 1 1 auto;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+        }
         @media only screen and (max-width: 600px) {
             margin: 10px;
+
+            .mobile-scrollable {
+                overflow: hidden;
+                overflow-y: scroll;
+
+                ::-webkit-scrollbar {
+                    width: 5px;
+                }
+            
+                ::-webkit-scrollbar-track {
+                    background-color: transparent;
+                }
+            
+                ::-webkit-scrollbar-thumb {
+                    background-color: var(--dark2);
+                    border-radius: 10px;
+                }
+            }
         }
+
     }
 
 

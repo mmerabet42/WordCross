@@ -32,10 +32,12 @@ const InnerApp = () => {
             {
                 name: "Generator",
                 component: (
+                    // <div className="mobile-scrollable">
                     <>
                         <Dashboard />
                         <GraphOutput />
                     </>
+                    // </div>
                 )
             }, { 
                 name: "Bookmarks",
