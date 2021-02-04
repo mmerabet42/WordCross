@@ -8,22 +8,42 @@ export const DashboardContainer = styled.div`
     margin-left: 100px;
     margin-right: 100px;
 
+    @media only screen and (max-width: 900px) {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
     .inputs {
         display: flex;
         flex-direction: row;
         padding: 5px;
+
+        @media only screen and (max-width: 600px) {
+            flex-direction: column;
+        }
     }
 
     .fields {
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        width: 100%;
+        /* width: 100%; */
         margin-right: 10px;
         padding: 15px;
 
         background-color: var(--dark2);
         border-radius: 10px;
+
+        @media only screen and (max-width: 600px) {
+            margin-right: 0px;
+            margin-bottom: 10px;
+        }
     }
 
     .name-input {
@@ -54,10 +74,20 @@ export const DashboardContainer = styled.div`
             cursor: pointer;
             padding: 0px;
             margin: 0px;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
 
             :hover {
                 text-decoration: underline;
             }
+        }
+
+        @media only screen and (max-width: 600px) {
+            align-self: stretch;
+            flex-direction: row;
+            justify-content: space-evenly;
+            padding-left: 0px;
+            padding-top: 10px;
         }
     }
 
@@ -65,6 +95,7 @@ export const DashboardContainer = styled.div`
         /* flex: 1 1 auto; */
         cursor: pointer;
         outline: none;
+        -webkit-tap-highlight-color: transparent;
         
         font-family: inherit;
         font-size: 25px;
@@ -80,74 +111,51 @@ export const DashboardContainer = styled.div`
         transition: all 0.1s linear;
     }
 
-    .generate-button:hover {
-        transform: scale(1.05);
+    @media only screen and (min-width: 600px) {
+        .generate-button:hover {
+            transform: scale(1.05);
+        }
+
+        .generate-button:active {
+            transform: scale(1.0);
+        }
     }
 
-    .generate-button:active {
-        transform: scale(1.0);
+    @media only screen and (max-width: 600px) {
+        .generate-button:active {
+            transform: scale(1.1);
+        }
     }
 
     .names-container {
-        flex: 1 1 auto;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
 
         overflow: hidden;
-    }
 
-    .icons {
-        flex: 1 1 auto;
-        
-        /* margin: 10px; */
-        display: flex;
-        flex-direction: row;
-    }
-
-    .random-icon, .trash-icon {
-        cursor: pointer;
-        /* border-radius: 10px; */
-        font-size: 1.5em;
-        padding: 10px;
-        /* margin: 5px; */
-        /* padding-left: 20px; */
-        /* padding-right: 20px; */
-        height: 1em;
-
-        transition: all 0.1s linear;
-
-        :hover {
-            /* z-index: 100; */
-            transform: scale(1.1);
+        @media only screen and (max-width: 600px) {
+            flex-direction: column;
+            align-items: flex-start;
         }
-
-        :active {
-            transform: scale(1.0);
-        }
-    }
-
-    .random-icon {
-        color: var(--white);
-        display: flex;
-        border-top-right-radius: 10px;
-    }
-
-    .trash-icon {
-        color: var(--white);
-        border-top-left-radius: 10px;
     }
 
     .names {
         flex: 1 1 auto;
         display: flex;
         flex-direction: row;
+        width: 100%;
+        overflow: hidden;
         overflow-x: scroll;
     }
 
     .names::-webkit-scrollbar {
         height: 5px;
+
+        @media only screen and (max-width: 600px) {
+            height: 2px;
+        }
     }
 
     .names::-webkit-scrollbar-track {
@@ -184,6 +192,7 @@ export const DashboardContainer = styled.div`
         margin: 0px;
         padding-left: 0px;
         font-size: 100%;
+        white-space: nowrap;
     }
 
     .one-name p {
@@ -197,11 +206,18 @@ export const DashboardContainer = styled.div`
         transition: all 0.1s linear;
     }
 
-    .one-name:hover {
-        background-color: var(--red);
+    @media only screen and (min-width: 600px) {
+        .one-name:hover {
+            background-color: var(--red);
+        }
+
+        .one-name:hover .close-icon {
+            transform: scale(1.1);
+        }
     }
 
-    .one-name:hover .close-icon {
-        transform: scale(1.1);
+    .one-name-mode {
+        background-color: var(--green);
     }
+
 `;

@@ -35,8 +35,8 @@ const Settings = ({onClick}) => {
                         <p className="group-title">Generator Output</p>
                         <div className="group-settings">
                             <div className="setting graph-limit">
-                                <p className="descr">Maximum number of graphs to be shown (> 5)</p>
-                                <input ref={graphLimitRef} className="input" type="number" defaultValue={offsets.max} min="5" />
+                                <p className="descr">Maximum number of graphs to be shown (5{'>'}q10000)</p>
+                                <input ref={graphLimitRef} className="input" type="number" defaultValue={offsets.max} min="5" max="10000" />
                             </div>
                         </div>
                     </div>

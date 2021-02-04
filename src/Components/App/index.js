@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HiMenu } from 'react-icons/hi';
+import { HiMenuAlt4 } from 'react-icons/hi';
 import { RiSettings3Fill } from 'react-icons/ri';
 
 import { AppProvider } from '../../Contexts/AppContext';
@@ -14,6 +14,7 @@ import GraphOutput from '../GraphOutput';
 import Bookmarks from '../Bookmarks';
 import Homepage from '../Homepage';
 import Settings from '../Settings';
+import HamMenu from '../HamMenu';
 
 const App = () => (
     <AppProvider>
@@ -24,6 +25,7 @@ const App = () => (
 const InnerApp = () => {
 
     const [ showSettings, setShowSettings ] = React.useState(false);
+    const [ showHamMenu, setShowHamMenu ] = React.useState(false);
     const [ menuState, setMenuState ] = React.useState({
         current: 2,
         menus: [
@@ -53,6 +55,7 @@ const InnerApp = () => {
     const menuClick = (name) => {
         const id = menuState.menus.findIndex(value => value.name === name);
 
+        setShowHamMenu(false);
         if (menuState.current === id)
             return;
         
@@ -85,6 +88,23 @@ const InnerApp = () => {
                         className="settings"
                         onClick={() => setShowSettings(true)}
                     />
+                </div>
+                <div className="menu-hamburger">
+                    <HiMenuAlt4
+                        className="ham-icon"
+                        onClick={() => setShowHamMenu(true)}
+                    />
+                    { showHamMenu &&
+                        <HamMenu
+                            onClose={() => setShowHamMenu(false)}
+                            menuState={menuState}
+                            menuClick={menuClick}
+                            setShowSettings={() => {
+                                setShowSettings(true);
+                                setShowHamMenu(false);
+                            }}
+                        />
+                    }
                 </div>
             </div>
             <div className="padded">

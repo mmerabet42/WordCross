@@ -14,12 +14,23 @@ export const AppContainer = styled.div`
     .padded {
         height: calc(100% - 100px);
         margin: 50px;
-        
+
         overflow: hidden;
 
         display: flex;
         flex-direction: column;
+
+        @media only screen and (max-width: 1000px) {
+            /* margin: 10px; */
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            margin: 10px;
+        }
     }
+
 
     .title-container {
         display: flex;
@@ -48,6 +59,18 @@ export const AppContainer = styled.div`
         z-index: 0;
         /* box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3); */
         margin-top: 5px;
+
+        @media only screen and (max-width: 700px) {
+            display: none;
+        }
+    }
+
+    .menu-hamburger {
+        display: none;
+
+        @media only screen and (max-width: 700px) {
+            display: flex;
+        }
     }
 
     .menu-selector .icon {
@@ -65,15 +88,16 @@ export const AppContainer = styled.div`
         }
     }
 
-    .menu-selector .settings {
+    .menu-selector .settings, .menu-hamburger .ham-icon {
+        cursor: pointer;
         font-size: 30px;
         margin-left: 20px;
 
         transition: all 0.1s linear;
 
-        :hover {
+        /* :hover {
             transform: scaleX(1.5) scaleY(0.9);
-        }
+        } */
 
         :active {
             transform: scaleY(1.5);

@@ -18,8 +18,17 @@ const GraphOutput = () => {
         addFavorite, removeFavorite, names, favorites
     } = React.useContext(AppContext);
     
+    // const [ graphStyles, setGraphStyles ] = React.useState([]);
+    // const [ applyRescale, setApplyRescale ] = React.useState(false);
+
     const seeNextRef = React.useRef();
     const seePrevRef = React.useRef();
+
+    // const graphContainerRef = React.useRef(Array(offsets.max).fill({
+    //     current: null,
+    //     style: {}
+    // }));
+    const graphsScrollRef = React.useRef();
 
     React.useEffect(() => {
         if (offsets.goSmooth && seeNextRef.current && seePrevRef.current)
@@ -27,6 +36,40 @@ const GraphOutput = () => {
                 behavior: 'auto'
             });
     }, [offsets]);
+
+    // const rescaleGraphs = (recall) => {
+    //     console.log("heeelllllooooo");
+    //     const containerHeight = graphsScrollRef.current.clientHeight;
+    //     graphContainerRef.current.forEach(value => {    
+    //         if (!value.current)
+    //             return;
+    //         if (value.current.clientHeight > containerHeight) {
+    //             const surplue = (containerHeight - 20) / value.current.clientHeight;
+    //             if (surplue < 1.0) {
+    //                 value.current.style.transform = `scale(${surplue})`;
+    //                 // value.style.minWidth = value.current.clientWidth - 100;
+    //                 // value.style.fontSize = value.style.fontSize;
+    //             }
+    //         }
+    //     });
+    //     // console.log("eirbhvefvezrv");
+    //     if (!recall) {
+    //         setApplyRescale(prev => true);
+    //     }
+    // }
+
+    // React.useLayoutEffect(() => {
+    //     // console.log("last");
+    //     rescaleGraphs(true);
+    // }, []);
+
+    // React.useEffect(() => {
+    //     window.addEventListener("resize", rescaleGraphs);
+
+    //     return () => {
+    //         window.removeEventListener("resize", rescaleGraphs);
+    //     }
+    // })
 
     const getMinGraphs = () => {
         const minGraphs = [];
@@ -48,46 +91,21 @@ const GraphOutput = () => {
     }
 
     return (
-        <GraphsContainer>
+        <GraphsContainer ref={graphsScrollRef}>
             { offsets.offset > 0 &&
                 <div ref={seePrevRef} className="see-next" onClick={() => generateGraph(names, -1)}>
                     <FaArrowLeft />
                 </div>
             }
             {getMinGraphs().map(({graphId, bookmarked}, id) => (
-                <Graph
-                    key={id}
-                    widthC={graphs[graphId].width}
-                    heightC={graphs[graphId].height}
-                >
-                    <div className="main">
-                        <div className="centerer">
-                            <div className="container">
-                                {graphs[graphId].letters.map((letter, id) => (
-                                    <Character
-                                        key={id}
-                                        xPos={letter.x}
-                                        yPos={letter.y}
-                                        xOffset={graphs[graphId].xOffset}
-                                        yOffset={graphs[graphId].yOffset}
-                                    >
-                                        {letter.letter}
-                                    </Character>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="controller">
-                            <p># {graphId}</p>
-                            <div className="icons">
-                                <MdFullscreen className="full-icon" />
-                                { bookmarked
-                                    ? <AiFillStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
-                                    : <AiOutlineStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </Graph>
+                <GraphElement
+                    key={graphs[graphId].id}
+                    graphs={graphs}
+                    graphId={graphId}
+                    bookmarked={bookmarked}
+                    scrollRef={graphsScrollRef}
+                    favoriteGraph={favoriteGraph}
+                />
             ))}
             { (graphs.length > offsets.offset + offsets.max || lastConfig) &&
                 <div ref={seeNextRef} className="see-next" onClick={() => generateGraph(names, 1)}>
@@ -96,6 +114,95 @@ const GraphOutput = () => {
             }
         </GraphsContainer>
     );
+}
+
+const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) => {
+    const [ graphStyle, setGraphStyle ] = React.useState({});
+    const [ surplueValue, setSurplueValue ] = React.useState(0.0);
+    const graphRef = React.useRef();
+
+    const rescaleGraph = () => {
+        const graphHeight = (graphs[graphId].height + 2) * 40;
+        if (graphHeight > scrollRef.current.clientHeight) {
+            const surplue = (scrollRef.current.clientHeight - 20) / graphHeight;
+            console.log(`surplue: ${surplue} ${(surplue * ((graphs[graphId].width + 1) * 40)) + 20}`);
+            if (surplue > 0.0) {
+                setSurplueValue(surplue);
+            } 
+        }
+    }
+
+    React.useEffect(() => {
+        rescaleGraph();
+
+        window.addEventListener("resize", rescaleGraph);
+
+        return () => window.removeEventListener("resize", rescaleGraph);
+    }, []);
+
+    return (
+        <Graph
+            // ref={}
+            widthC={graphs[graphId].width}
+            heightC={graphs[graphId].height}
+            surplue={surplueValue === 0 ? 1.0 : surplueValue}
+        >
+            <div
+                ref={graphRef}
+                className="inner-container"
+                // style={graphStyle}
+            >
+                {graphs[graphId].letters.map((letter, id) => (
+                    <Character
+                        key={id}
+                        xPos={letter.x}
+                        yPos={letter.y}
+                        xOffset={graphs[graphId].xOffset}
+                        yOffset={graphs[graphId].yOffset}
+                    >
+                        {letter.letter}
+                    </Character>
+                ))}
+            </div>
+            <div className="mask">
+                <p># {graphId}</p>
+                <div className="icons">
+                    <MdFullscreen className="full-icon" />
+                    { bookmarked
+                        ? <AiFillStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
+                        : <AiOutlineStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
+                    }
+                </div>
+            </div>
+        </Graph>
+    );
+    // {/* <div className="main">
+    //     <div className="centerer">
+    //         <div className="container">
+    //             {graphs[graphId].letters.map((letter, id) => (
+    //                 <Character
+    //                     key={id}
+    //                     xPos={letter.x}
+    //                     yPos={letter.y}
+    //                     xOffset={graphs[graphId].xOffset}
+    //                     yOffset={graphs[graphId].yOffset}
+    //                 >
+    //                     {letter.letter}
+    //                 </Character>
+    //             ))}
+    //         </div>
+    //     </div>
+    //     <div className="controller">
+    //         <p># {graphId}</p>
+    //         <div className="icons">
+    //             <MdFullscreen className="full-icon" />
+    //             { bookmarked
+    //                 ? <AiFillStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
+    //                 : <AiOutlineStar className="star-icon" onClick={() => favoriteGraph(graphId, bookmarked)} />
+    //             }
+    //         </div>
+    //     </div>
+    // </div> */}
 }
 
 export default GraphOutput;

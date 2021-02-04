@@ -1,6 +1,9 @@
 import React from 'react';
+import update from 'immutability-helper';
 
 import { CgClose } from 'react-icons/cg';
+import { MdEdit } from 'react-icons/md';
+import { BiMove } from 'react-icons/bi';
 
 import {
     DashboardContainer
@@ -9,6 +12,7 @@ import {
 import { AppContext } from '../../Contexts/AppContext';
 
 const CURRENT_NAMES_STORAGE_KEY = "currentnames";
+const NAME_MODE_STORAGE_KEY = "nameMode";
 
 const Dashboard = () => {
     const {
@@ -16,23 +20,28 @@ const Dashboard = () => {
      } = React.useContext(AppContext);
 
     const [ currentNames, setCurrentNames ] = React.useState([]);
-    const [ sendNames, setSendNames ] = React.useState(false);
+    const [ nameMode, setNameMode ] = React.useState({});
 
     const nameRef = React.useRef();
     
     React.useEffect(() => {
         const currentNamesItem = localStorage.getItem(CURRENT_NAMES_STORAGE_KEY);
+        const nameModeItem = localStorage.getItem(NAME_MODE_STORAGE_KEY);
 
         setCurrentNames(JSON.parse(currentNamesItem) ?? []);
+        setNameMode(JSON.parse(nameModeItem) ?? {
+            id: -1,
+            mode: "close"
+        });
     }, []);
-
-    // React.useEffect(() => {
-    //     generateGraph(0);
-    // }, [names]);
 
     React.useEffect(() => {
         localStorage.setItem(CURRENT_NAMES_STORAGE_KEY, JSON.stringify(currentNames));
     }, [currentNames]);
+
+    React.useEffect(() => {
+        localStorage.setItem(NAME_MODE_STORAGE_KEY, JSON.stringify(nameMode));
+    }, [nameMode]);
 
     const onKeyDown = (e) => {
         if (e.key !== " " && e.key !== "Enter")
@@ -46,12 +55,65 @@ const Dashboard = () => {
         setCurrentNames(prev => [...prev, trimmed.toUpperCase()]);
     }
 
-    const removeName = (id) => {
-        setCurrentNames(prev => {
-            const copy = [...prev];
-            copy.splice(id, 1);
-            return copy;   
-        });
+    let cancelClick = false;
+    const applyIcon = (id) => {
+        if (nameMode.id === id && nameMode.mode === "edit") {
+            setCurrentNames(prev => update(prev, {
+                    [id]: {
+                        $set: nameRef.current.value
+                    }
+                })
+            );
+            setNameMode({ id: -1 });
+        }
+        else {
+            setCurrentNames(prev => {
+                const copy = [...prev];
+                copy.splice(id, 1);
+                return copy;   
+            });
+            setNameMode({ id: -1 });
+            cancelClick = true;
+        }
+    }
+
+    const onDoubleClick = (id) => {
+        if (nameMode.id === id && nameMode.mode === "edit") {
+            nameRef.current.value = "";
+            setNameMode({ id: -1 });
+        }
+        else {
+            nameRef.current.value = currentNames[id].toLowerCase();
+            setNameMode({
+                id: id,
+                mode: "edit"
+            });
+        }
+    }
+
+    const onClick = (id) => {
+        if (cancelClick) {
+            cancelClick = false;
+            return;
+        }
+    
+        if (nameMode.id === id && (nameMode.mode === "move" || nameMode.mode === "remove"))
+            setNameMode({ id: -1 });
+        else if (nameMode.id === -1) {
+            setNameMode({
+                id: id,
+                mode: "move"
+            });
+        }
+        else if (nameMode.mode === "move") {
+            setCurrentNames(prev => {
+                const copy = [...prev];
+                copy.splice(nameMode.id, 1);
+                copy.splice(id, 0, prev[nameMode.id]);
+                return copy;
+            });
+            setNameMode({ id: -1 });
+        }
     }
 
     const onDrop = (event, where, target) => {
@@ -88,6 +150,12 @@ const Dashboard = () => {
             copy[i] = tmp;
         }
         setCurrentNames(copy);
+        setNameMode({ id: -1 });
+    }
+
+    const clearNames = () => {
+        setCurrentNames([]);
+        setNameMode({ id: -1 });
     }
 
     const startGeneration = () => {
@@ -110,31 +178,37 @@ const Dashboard = () => {
                     <div className="names-container">
                         <div className="names">
                             { currentNames.length
-                                ? currentNames.map((name, id) => (
-                                    <div
-                                        key={id} className="one-name one-name-around"
-                                        onDragStart={(event) => onDragStart(event, id)}
-                                        onDrop={(event) => onDrop(event, "name", id)}
-                                        onDragOver={onDragOver}
-                                        draggable
-                                    >
-                                        <p>{name.toLowerCase()}</p>
-                                        <CgClose className="close-icon" onClick={() => removeName(id)} />
-                                    </div>
-                                ))
+                                ? currentNames.map((name, id) => {
+                                    let NameIcon = CgClose;
+                                    if (nameMode.id === id) {
+                                        if (nameMode.mode === "edit")
+                                            NameIcon = MdEdit;
+                                        else if (nameMode.mode === "move")
+                                            NameIcon = BiMove;
+                                    }
+
+                                    return (
+                                        <div
+                                            key={id}
+                                            className={`one-name one-name-around ${id === nameMode.id && `one-name-mode`}`}
+                                            onDragStart={(event) => onDragStart(event, id)}
+                                            onDrop={(event) => onDrop(event, "name", id)}
+                                            onDragOver={onDragOver}
+                                            onDoubleClick={() => onDoubleClick(id)}
+                                            onClick={() => onClick(id)}
+                                            draggable
+                                        >
+                                            <p>{name.toLowerCase()}</p>
+                                            <NameIcon className="close-icon" onClick={() => applyIcon(id)} />
+                                        </div>
+                                    );
+                                })
                                 : <p className="one-name-around no-name">There are no names. Add names by using the text field above.</p>
                             }
                         </div>
                         <div className="buttons">
                             <p onClick={randomOrder}>Randomize</p>
-                            <p onClick={() => setCurrentNames([])}>Clear All</p>
-                            {/* <div className="icons">
-                                <div className="random-icon" onClick={randomOrder}>
-                                    <VscDebugRestart />
-                                    <BiDice5 />
-                                </div>
-                                <HiTrash className="trash-icon" onClick={() => { setCurrentNames([]) }} />
-                            </div> */}
+                            <p onClick={clearNames}>Clear All</p>
                         </div>
                     </div>
                 </div>

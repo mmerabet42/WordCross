@@ -29,10 +29,21 @@ export const Menu = styled.div`
     position: absolute;
 
     background-color: var(--dark);
-    border-radius: 10px;
 
-    height: 70%;
-    width: 70%;
+    @media only screen and (min-width: 600px) {
+        height: 70%;
+        width: 70%;
+        border-radius: 10px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(20px);
+    }
 
     padding: 10px;
 
@@ -117,6 +128,7 @@ export const Menu = styled.div`
             .setting {
                 display: flex;
                 flex-direction: row;
+                justify-content: space-between;
                 align-items: center;
 
                 .descr {
@@ -161,8 +173,10 @@ export const Menu = styled.div`
 
         transition: all 0.1s cubic-bezier(0.47, 0, 0.745, 0.715);
 
-        :hover {
-            transform: scale(0.98);
+        @media only screen and (min-width: 600px) {
+            :hover {
+                transform: scale(0.98);
+            }
         }
 
         :active {
