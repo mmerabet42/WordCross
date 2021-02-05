@@ -56,8 +56,9 @@ const GraphOutput = () => {
     const [ dimensionsCalc, setDimensionsCalc ] = React.useState(false);
 
     React.useEffect(() => {
-        console.log(`dims: ${graphsScrollRef.clientHeight}`);
-    }, []);
+        if (!graphsScrollRef.current)
+            setDimensionsCalc(false);
+    });
 
     const onRef = (el) => {
         if (!graphsScrollRef.current) {
