@@ -24,11 +24,7 @@ const GraphOutput = () => {
     const seeNextRef = React.useRef();
     const seePrevRef = React.useRef();
 
-    // const graphContainerRef = React.useRef(Array(offsets.max).fill({
-    //     current: null,
-    //     style: {}
-    // }));
-    const graphsScrollRef = React.useRef();
+    // const [ graphsScrollRef, setGraphsScrollRef ] = React.useState(null);
 
     React.useEffect(() => {
         if (offsets.goSmooth && seeNextRef.current && seePrevRef.current)
@@ -36,40 +32,6 @@ const GraphOutput = () => {
                 behavior: 'auto'
             });
     }, [offsets]);
-
-    // const rescaleGraphs = (recall) => {
-    //     console.log("heeelllllooooo");
-    //     const containerHeight = graphsScrollRef.current.clientHeight;
-    //     graphContainerRef.current.forEach(value => {    
-    //         if (!value.current)
-    //             return;
-    //         if (value.current.clientHeight > containerHeight) {
-    //             const surplue = (containerHeight - 20) / value.current.clientHeight;
-    //             if (surplue < 1.0) {
-    //                 value.current.style.transform = `scale(${surplue})`;
-    //                 // value.style.minWidth = value.current.clientWidth - 100;
-    //                 // value.style.fontSize = value.style.fontSize;
-    //             }
-    //         }
-    //     });
-    //     // console.log("eirbhvefvezrv");
-    //     if (!recall) {
-    //         setApplyRescale(prev => true);
-    //     }
-    // }
-
-    // React.useLayoutEffect(() => {
-    //     // console.log("last");
-    //     rescaleGraphs(true);
-    // }, []);
-
-    // React.useEffect(() => {
-    //     window.addEventListener("resize", rescaleGraphs);
-
-    //     return () => {
-    //         window.removeEventListener("resize", rescaleGraphs);
-    //     }
-    // })
 
     const getMinGraphs = () => {
         const minGraphs = [];
@@ -89,22 +51,38 @@ const GraphOutput = () => {
         else
             addFavorite(graphId);
     }
+    
+    const graphsScrollRef = React.useRef();
+    const [ dimensionsCalc, setDimensionsCalc ] = React.useState(false);
+
+    React.useEffect(() => {
+        console.log(`dims: ${graphsScrollRef.clientHeight}`);
+    }, []);
+
+    const onRef = (el) => {
+        if (!graphsScrollRef.current) {
+            graphsScrollRef.current = el;
+            setDimensionsCalc(true);
+        }
+    }
 
     return (
-        <GraphsContainer ref={graphsScrollRef}>
+        <GraphsContainer ref={onRef}>
             { offsets.offset > 0 &&
                 <div ref={seePrevRef} className="see-next" onClick={() => generateGraph(names, -1)}>
                     <FaArrowLeft />
                 </div>
             }
-            {getMinGraphs().map(({graphId, bookmarked}, id) => (
+            { dimensionsCalc && getMinGraphs().map(({graphId, bookmarked}, id) => (
                 <GraphElement
                     key={id}
+                    id={id}
                     graphs={graphs}
                     graphId={graphId}
                     bookmarked={bookmarked}
-                    scrollRef={graphsScrollRef}
                     favoriteGraph={favoriteGraph}
+                    scrollHeight={graphsScrollRef.current ? graphsScrollRef.current.clientHeight : 0.0}
+                    scrollWidth={graphsScrollRef.current ? graphsScrollRef.current.clientWidth : 0.0}
                 />
             ))}
             { (graphs.length > offsets.offset + offsets.max || lastConfig) &&
@@ -116,20 +94,18 @@ const GraphOutput = () => {
     );
 }
 
-const GraphElement = ({key, graphs, graphId, bookmarked, scrollRef, favoriteGraph}) => {
-    // const [ surplueValue, setSurplueValue ] = React.useState(0.0);
-    const graphRef = React.useRef();
+const GraphElement = ({id, graphs, graphId, bookmarked, favoriteGraph, scrollWidth, scrollHeight}) => {
     let surplueValue = 0.0;
 
     const rescaleGraph = () => {
         let axis, bigAxis;
         if (window.innerWidth <= 600) {
             axis = (graphs[graphId].width + 2) * 40;
-            bigAxis = scrollRef.current.clientWidth;
+            bigAxis = scrollWidth;
         }
         else {
             axis = (graphs[graphId].height + 6) * 40;
-            bigAxis = scrollRef.current.clientHeight;
+            bigAxis = scrollHeight;
         }
 
         if (axis > bigAxis) {
@@ -150,14 +126,13 @@ const GraphElement = ({key, graphs, graphId, bookmarked, scrollRef, favoriteGrap
     rescaleGraph();
     return (
         <Graph
-            key={key}
+            key={id}
             widthC={graphs[graphId].width}
             heightC={graphs[graphId].height}
             surplue={surplueValue === 0 ? 1.0 : surplueValue}
         >
             <div className="centerer">
                 <div
-                    ref={graphRef}
                     className="inner-container"
                 >
                     {graphs[graphId].letters.map((letter, id) => (
