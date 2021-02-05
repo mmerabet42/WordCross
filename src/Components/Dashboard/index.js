@@ -48,13 +48,13 @@ const Dashboard = () => {
     const onKeyDown = (e) => {
         if (e.key !== " " && e.key !== "Enter")
             return;
-        const trimmed = nameRef.current.value.trim();
+        const trimmed = nameRef.current.value.trim().split(/\s+/);
         nameRef.current.value = "";
         e.preventDefault();
 
         if (trimmed.length === 0)
             return;
-        setCurrentNames(prev => [...prev, trimmed.toUpperCase()]);
+        setCurrentNames(prev => [...prev, ...trimmed]);
     }
 
     let cancelClick = false;

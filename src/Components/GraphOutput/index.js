@@ -17,14 +17,9 @@ const GraphOutput = () => {
         graphs, lastConfig, offsets, generateGraph,
         addFavorite, removeFavorite, names, favorites
     } = React.useContext(AppContext);
-    
-    // const [ graphStyles, setGraphStyles ] = React.useState([]);
-    // const [ applyRescale, setApplyRescale ] = React.useState(false);
 
     const seeNextRef = React.useRef();
     const seePrevRef = React.useRef();
-
-    // const [ graphsScrollRef, setGraphsScrollRef ] = React.useState(null);
 
     React.useEffect(() => {
         if (offsets.goSmooth && seeNextRef.current && seePrevRef.current)
@@ -54,11 +49,19 @@ const GraphOutput = () => {
     
     const graphsScrollRef = React.useRef();
     const [ dimensionsCalc, setDimensionsCalc ] = React.useState(false);
+    const [ fakeState, setFakeState ] = React.useState(true);
 
     React.useEffect(() => {
         if (!graphsScrollRef.current)
             setDimensionsCalc(false);
-    });
+
+        const onResize = () => {
+            setFakeState(p => !p);
+        }
+
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
 
     const onRef = (el) => {
         if (!graphsScrollRef.current) {
@@ -115,14 +118,6 @@ const GraphElement = ({id, graphs, graphId, bookmarked, favoriteGraph, scrollWid
                 surplueValue = surplue;
         }
     }
-
-    React.useEffect(() => {
-        // rescaleGraph();
-
-        window.addEventListener("resize", rescaleGraph);
-
-        return () => window.removeEventListener("resize", rescaleGraph);
-    });
 
     rescaleGraph();
     return (

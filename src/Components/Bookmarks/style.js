@@ -221,4 +221,6 @@ export const Character = styled.p`
     margin-block-start: 0;
     margin-block-end: 0;
     padding: 0px;
+
+    text-transform: uppercase;
 `;

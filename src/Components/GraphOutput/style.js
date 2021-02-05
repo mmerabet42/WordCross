@@ -198,6 +198,8 @@ export const Character = styled.p`
     margin-block-end: 0;
     padding: 0px;
 
+    text-transform: uppercase;
+
     transition: all 2s ease;
 
     :hover {
