@@ -99,7 +99,7 @@ const GraphOutput = () => {
             }
             {getMinGraphs().map(({graphId, bookmarked}, id) => (
                 <GraphElement
-                    key={graphs[graphId].id}
+                    key={id}
                     graphs={graphs}
                     graphId={graphId}
                     bookmarked={bookmarked}
@@ -116,9 +116,10 @@ const GraphOutput = () => {
     );
 }
 
-const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) => {
-    const [ surplueValue, setSurplueValue ] = React.useState(0.0);
+const GraphElement = ({key, graphs, graphId, bookmarked, scrollRef, favoriteGraph}) => {
+    // const [ surplueValue, setSurplueValue ] = React.useState(0.0);
     const graphRef = React.useRef();
+    let surplueValue = 0.0;
 
     const rescaleGraph = () => {
         let axis, bigAxis;
@@ -134,20 +135,22 @@ const GraphElement = ({graphs, graphId, bookmarked, scrollRef, favoriteGraph}) =
         if (axis > bigAxis) {
             const surplue = (bigAxis - 20) / axis;
             if (surplue > 0.0)
-                setSurplueValue(surplue);
+                surplueValue = surplue;
         }
     }
 
     React.useEffect(() => {
-        rescaleGraph();
+        // rescaleGraph();
 
         window.addEventListener("resize", rescaleGraph);
 
         return () => window.removeEventListener("resize", rescaleGraph);
     });
 
+    rescaleGraph();
     return (
         <Graph
+            key={key}
             widthC={graphs[graphId].width}
             heightC={graphs[graphId].height}
             surplue={surplueValue === 0 ? 1.0 : surplueValue}

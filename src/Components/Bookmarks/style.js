@@ -26,10 +26,6 @@ export const BookmarksContainer = styled.div`
         padding: 10px;
 
         margin: 10px;
-
-        @media only screen and (max-width: 600px) {
-            padding: 5px;
-        }
     }
 
     .name-info {

@@ -80,6 +80,7 @@ export const Graph = styled.div`
         min-height: ${props => `${(props.heightC + 4)}em`};
     }
 
+    transition: none;
     font-size: ${props => `${props.surplue * 40}px`};
     background-color: var(--dark3);
     color: var(--white);
